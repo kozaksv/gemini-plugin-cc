@@ -32,29 +32,38 @@ read-only review or a write-capable rescue), and one shared Gemini runtime is re
 
 ## Install
 
-Add the marketplace in Claude Code:
+These commands are typed inside Claude Code (not in a shell).
 
-```bash
-/plugin marketplace add <your-fork>/gemini-plugin-cc
+Add the marketplace (`gemini-cli` is the marketplace name; `gemini` is the plugin):
+
+```text
+/plugin marketplace add kozaksv/gemini-plugin-cc
 ```
 
-Install the plugin:
+Install the plugin and reload:
 
-```bash
+```text
 /plugin install gemini@gemini-cli
-```
-
-Reload plugins:
-
-```bash
 /reload-plugins
 ```
 
-Then run:
+Then verify everything is ready:
 
-```bash
+```text
 /gemini:setup
 ```
+
+> [!TIP]
+> Installing from your own fork? Swap `kozaksv` for your GitHub user. The marketplace add pulls the
+> repository's **default branch**, so make sure the plugin is on that branch first.
+>
+> To install from a local clone instead of GitHub, point the marketplace at the folder that contains
+> `.claude-plugin/marketplace.json`:
+>
+> ```text
+> /plugin marketplace add /absolute/path/to/gemini-plugin-cc
+> /plugin install gemini@gemini-cli
+> ```
 
 `/gemini:setup` will tell you whether Gemini is ready. If Gemini is missing and npm is available, it can
 offer to install Gemini for you.
