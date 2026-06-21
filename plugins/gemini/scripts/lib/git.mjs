@@ -5,8 +5,14 @@ import { isProbablyText } from "./fs.mjs";
 import { formatCommandFailure, runCommand, runCommandChecked } from "./process.mjs";
 
 const MAX_UNTRACKED_BYTES = 24 * 1024;
-const DEFAULT_INLINE_DIFF_MAX_FILES = 2;
-const DEFAULT_INLINE_DIFF_MAX_BYTES = 256 * 1024;
+// Inline the full diff into the review prompt for any realistically-sized branch
+// review. The "self-collect" fallback (model inspects the diff itself via git)
+// is unusable in review mode: reviews run in Gemini's read-only "plan" mode,
+// which grants no shell, so the model cannot run git and silently degrades to
+// reading a few guessed files. Inlining keeps coverage deterministic. Diffs past
+// the byte cap still fall back to self-collect (best-effort).
+const DEFAULT_INLINE_DIFF_MAX_FILES = 500;
+const DEFAULT_INLINE_DIFF_MAX_BYTES = 2 * 1024 * 1024;
 
 function git(cwd, args, options = {}) {
   return runCommand("git", args, { cwd, ...options });
